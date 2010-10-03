@@ -1,16 +1,61 @@
 = raymond
 
-Description goes here.
+Gives your view tables nice sorting ability with ease.
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+== Usage
+
+Prepare your model: specify, which columns may get sorted.
+
+  class VeryImportantData < ActiveRecord::Base
+
+    include Raymond::Model
+
+    # sort by these db table columns
+    allow_sort_by :name, :created_at
+
+    # sort by this method, that is _not_ a db table column
+    allow_sort_by :my_custom_method, :db => false
+
+    # do a very customized sort
+    allow_sort_by :my_sort_key, :method => Proc.new{|obj| obj.my_method(:my_param)}
+
+    ...
+
+Not very much to do in the Controller:
+
+  class VeryImportantDataController < ApplicationController
+
+    def index
+      @sorting = Raymond::Control.new(self, params[:sort])
+      @very_important_data = @sorting.result
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    end
+
+    ...
+
+Use a helper method in your view to show the table headers:
+
+  <tr>
+    <th><%= sort_header :name, 'Name' %></th>
+    <th><%= sort_header :my_custom_method, 'Column #2' %></th>
+    <th><%= sort_header :my_sort_key, 'Column #3' %></th>
+    <th><%= sort_header :created_at, 'Since' %></th>
+  </tr>
+
+And the helper method:
+
+  def sort_header(key, label)
+    current = @sorting.current_attr?(key)
+    symbol = current ? (@sorting.dir == :up ? '▲' : '▼') : ''
+    link_to "#{symbol}#{label}", "?sort=#{key}-#{current ? @sorting.inverse_dir : Raymond::DEFAULT_SORTING_DIR.to_s}"
+  end
+
+== What's next?
+
+There's more to come, this is only version 0.0.1.
 
 == Copyright
 
