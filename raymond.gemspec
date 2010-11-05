@@ -14,19 +14,21 @@ Gem::Specification.new do |s|
   s.email = %q{info@purevirtual.de}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc"
+    "README.rdoc"
   ]
   s.files = [
     ".document",
-     ".gitignore",
-     "LICENSE",
-     "README.rdoc",
-     "Rakefile",
-     "VERSION",
-     "lib/raymond.rb",
-     "spec/raymond_spec.rb",
-     "spec/spec.opts",
-     "spec/spec_helper.rb"
+    ".gitignore",
+    "LICENSE",
+    "README.rdoc",
+    "Rakefile",
+    "VERSION",
+    "lib/raymond.rb",
+    "lib/raymond/control.rb",
+    "lib/raymond/model.rb",
+    "spec/raymond_spec.rb",
+    "spec/spec.opts",
+    "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/cpetschnig/raymond}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -35,7 +37,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Sort columns in tables}
   s.test_files = [
     "spec/raymond_spec.rb",
-     "spec/spec_helper.rb"
+    "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -45,13 +47,19 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_development_dependency(%q<yard>, [">= 0"])
+      s.add_development_dependency(%q<activesupport>, [">= 3.0.0"])
+      s.add_development_dependency(%q<arel>, [">= 1.0.1"])
     else
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<yard>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 3.0.0"])
+      s.add_dependency(%q<arel>, [">= 1.0.1"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
     s.add_dependency(%q<yard>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 3.0.0"])
+    s.add_dependency(%q<arel>, [">= 1.0.1"])
   end
 end
 

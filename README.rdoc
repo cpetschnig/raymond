@@ -26,7 +26,10 @@ Not very much to do in the Controller:
   class VeryImportantDataController < ApplicationController
 
     def index
+      # create the sorting object and pass the sorting parameters
       @sorting = Raymond::Control.new(self, params[:sort])
+
+      # fetch the ordered result from the db; do method based sorting if necessary.
       @very_important_data = @sorting.result
 
       respond_to do |format|
@@ -45,12 +48,29 @@ Use a helper method in your view to show the table headers:
     <th><%= sort_header :created_at, 'Since' %></th>
   </tr>
 
-And the helper method:
+And the helper method (not included in Gem):
 
   def sort_header(key, label)
     current = @sorting.current_attr?(key)
     symbol = current ? (@sorting.dir == :up ? '▲' : '▼') : ''
     link_to "#{symbol}#{label}", "?sort=#{key}-#{current ? @sorting.inverse_dir : Raymond::DEFAULT_SORTING_DIR.to_s}"
+  end
+
+== More Customization
+
+  @sorting = Raymond::Control.new(self, params[:sort])
+
+In the example above, the class to query it determined by the name of the controller
+applying Ruby on Rails conventions (PeopleController will use the class Person).
+Passing the option :class will allow you to use any other class:
+
+  @sorting = Raymond::Control.new(self, params[:sort], :class => PlzUseThisClass)
+
+Often, you may want more control of the underlying SQL statement. Thanks to Arel,
+anything is possible:
+
+  @comments = @sorting.result do |active_relation|
+    active_relation.where(:deleted => false).limit(20)
   end
 
 == What's next?
